@@ -1,14 +1,4 @@
-// @todo: Темплейт карточки
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
-
-function makeCard(card, deleteCard) {
+function createCard(card, deleteCard) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
@@ -30,8 +20,8 @@ function showCards(cards) {
     const placeList = document.querySelector('.places__list');
 
     cards.forEach( x => {
-        placeList.appendChild(makeCard(x, deleteCard));
+        placeList.appendChild(createCard(x, deleteCard));
     })
 }
 
-showCards(initialCards);
+export {showCards, deleteCard, createCard};
