@@ -16,12 +16,10 @@ function deleteCard(card) {
     card.remove();
 }
 
-function showCards(cards) {
+export default function showCards(cards) {
     const placeList = document.querySelector('.places__list');
 
     cards.forEach( x => {
         placeList.appendChild(createCard(x, deleteCard));
     })
 }
-
-export {showCards, deleteCard, createCard};
