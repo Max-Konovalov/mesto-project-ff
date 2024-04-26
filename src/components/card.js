@@ -1,4 +1,5 @@
-function createCard(card, deleteCard) {
+export {createCard, showCards}
+function createCard(card) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
 
@@ -7,16 +8,16 @@ function createCard(card, deleteCard) {
     cardElement.querySelector('.card__title').textContent = card.name;
 
     cardElement.querySelector('.card__delete-button').addEventListener('click', (e) => {
-        deleteCard(e.target.parentElement);
+        e.target.parentElement.remove();
     })
     return cardElement;
 }
 
-function deleteCard(card) {
+export function deleteCard(card) {
     card.remove();
 }
 
-export default function showCards(cards) {
+function showCards(cards) {
     const placeList = document.querySelector('.places__list');
 
     cards.forEach( x => {

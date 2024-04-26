@@ -1,6 +1,6 @@
 import './pages/index.css';
-import showCards from "./components/card";
-import { openModal } from "./components/modal";
+import {showCards, createCard} from "./components/card";
+import { openModal, closeModal } from "./components/modal";
 
 const initialCards = [
     {
@@ -39,63 +39,70 @@ const profileAddButton = document.querySelector('.profile__add-button');
 
 
 
-profileEditButton.addEventListener("click", clickHandler);
-profileAddButton.addEventListener("click", clickHandler);
-placesList.addEventListener("click", clickHandler);
-
-function clickHandler(evt) {
-    switch (evt.target.classList.value) {
-        case "profile__edit-button":
-            openModal(document.querySelector(".popup_type_edit"));
-            break;
-        case "profile__add-button":
-            openModal(document.querySelector(".popup_type_new-card"));
-            break;
-        case "card__image":
-            openModal(document.querySelector(".popup_type_image"));
-            break
+profileEditButton.addEventListener("click", showProfileModal);
+profileAddButton.addEventListener("click", showAddCardModal);
+placesList.addEventListener("click", function (evt) {
+    if (evt.target.classList.contains('card__like-button')) {
+        evt.target.classList.toggle("card__like-button_is-active");
     }
+});
+
+placesList.addEventListener("click", function (evt) {
+    if (evt.target.classList.contains('card__image')) {
+        showImageModal(evt);
+    }
+});
+
+function showProfileModal() {
+    const profileModal = document.querySelector(".popup_type_edit");
+    profileModal.addEventListener("submit", editProfileHandler);
+    openModal(profileModal);
 }
 
-function likeHandler() {
+function showAddCardModal() {
+    const cardModal = document.querySelector(".popup_type_new-card");
+    cardModal.addEventListener("submit", addCardHandler);
+    openModal(cardModal);
+}
 
+function showImageModal(e) {
+    const cardModal = document.querySelector(".popup_type_image");
+
+    cardModal.querySelector('.popup__caption').textContent = e.target.alt;
+    cardModal.querySelector('.popup__image').src = e.target.src;
+    cardModal.querySelector('.popup__image').alt = e.target.alt;
+
+    openModal(cardModal);
 }
 
 
+function addCardHandler(e) {
+    e.preventDefault();
 
+    const form = document.forms['new-place'];
+    const card = {
+        name: form.elements['place-name'].value,
+        link: form.elements['link'].value
+    }
 
-// // export { openModal }
-//
-//
-// function openModal(evt) {
-//     switch (evt.target.classList.value) {
-//         if (evt.target.classList.contains("profile__edit-button") ||
-//         evt.target.classList.contains("profile__add-button"):
-//
-//             break;
-//         case "profile__add-button":
-//             openModal(".popup_type_new-card");
-//             break;
-//         default:
-//             break;
-//
-//             evt.target.style.visibility = "visible";
-//             // evt.target.style.display = "flex";
-//             const closeButton = evt.target.querySelector(".popup__close");
-//
-//             document.addEventListener('keydown', function (e) {
-//                 if (e.keyCode === 27) closeModal(evt);
-//                 console.log("asd")
-//             });
-//
-//             closeButton.addEventListener("click", function () {
-//                 closeModal(evt)
-//             });
-//     }
-// }
-function closeModal (evt, modal) {
-    // document.removeEventListener('keydown', function (e) {}
-    modal.classList.toggle("popup_is-opened");
+    placesList.append(createCard(card));
+
+    closeModal(e.target.parentElement.parentElement);
+}
+
+function editProfileHandler(e) {
+    e.preventDefault();
+
+    const form = document.forms['edit-profile'];
+
+    changeProfile(form.elements.name.value, form.elements.description.value);
+
+    closeModal(e.target.parentElement.parentElement);
+}
+
+function changeProfile(name, description) {
+    document.querySelector('.profile__title').textContent = name;
+    document.querySelector('.profile__description').textContent = description;
 }
 
 
