@@ -18,6 +18,10 @@ function openModal(domElement) {
     closeButton.addEventListener("click", function () {
         closeModal(domElement)
     });
+
+    document.addEventListener('click', function (event) {
+        if (event.target === domElement) closeModal(domElement);
+    })
 }
 //
 // function escKeyDownHandler(event) {

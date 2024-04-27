@@ -35,10 +35,6 @@ const placesList = document.querySelector('.places__list');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileAddButton = document.querySelector('.profile__add-button');
 
-
-
-
-
 profileEditButton.addEventListener("click", showProfileModal);
 profileAddButton.addEventListener("click", showAddCardModal);
 placesList.addEventListener("click", function (evt) {
@@ -55,7 +51,12 @@ placesList.addEventListener("click", function (evt) {
 
 function showProfileModal() {
     const profileModal = document.querySelector(".popup_type_edit");
+
+    document.forms['edit-profile'].name.value = document.querySelector(".profile__title").textContent;
+    document.forms['edit-profile'].description.value = document.querySelector(".profile__description").textContent;
+
     profileModal.addEventListener("submit", editProfileHandler);
+
     openModal(profileModal);
 }
 
@@ -75,7 +76,6 @@ function showImageModal(e) {
     openModal(cardModal);
 }
 
-
 function addCardHandler(e) {
     e.preventDefault();
 
@@ -85,7 +85,7 @@ function addCardHandler(e) {
         link: form.elements['link'].value
     }
 
-    placesList.append(createCard(card));
+    placesList.prepend(createCard(card));
 
     closeModal(e.target.parentElement.parentElement);
 }
@@ -104,5 +104,3 @@ function changeProfile(name, description) {
     document.querySelector('.profile__title').textContent = name;
     document.querySelector('.profile__description').textContent = description;
 }
-
-
