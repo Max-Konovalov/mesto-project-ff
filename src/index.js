@@ -43,30 +43,31 @@ const changeProfile = (name, description, form) => {
     document.querySelector('.profile__description').textContent = description;
 }
 
-const addCardHandler = (e) => {
+const handleAddCard = (e) => {
     e.preventDefault();
 
     const form = document.forms['new-place'];
-    form.reset;
+
 
     const card = {
         name: form.elements['place-name'].value,
         link: form.elements['link'].value
     }
 
+
     placesList.prepend(createCard(card));
 
-    closeModal(e.target.parentElement.parentElement);
+    closeModal(cardModal);
 }
 
-const editProfileHandler = (e) => {
+const handleEditProfile = (e) => {
     console.log(e);
     e.preventDefault();
 
     const form = document.forms['edit-profile'];
 
     changeProfile(form.elements.name.value, form.elements.description.value);
-    closeModal(e.target.parentElement.parentElement);
+    closeModal(profileModal);
 }
 
 profileEditButton.addEventListener("click", () => {
@@ -76,7 +77,10 @@ profileEditButton.addEventListener("click", () => {
 
 });
 
-cardAddButton.addEventListener("click", () => openModal(cardModal));
+cardAddButton.addEventListener("click", () => {
+    document.forms['new-place'].reset();
+    openModal(cardModal)
+});
 placesList.addEventListener("click", function (evt) {
     if (evt.target.classList.contains('card__like-button')) {
         evt.target.classList.toggle("card__like-button_is-active");
@@ -93,8 +97,8 @@ placesList.addEventListener("click", function (evt) {
     }
 });
 
-cardModal.addEventListener("submit", addCardHandler);
-profileModal.addEventListener("submit", editProfileHandler);
+cardModal.addEventListener("submit", handleAddCard);
+profileModal.addEventListener("submit", handleEditProfile);
 
 document.addEventListener('keydown', (e) => {
     if (e.keyCode === 27) {
