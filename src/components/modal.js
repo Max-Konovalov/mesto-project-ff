@@ -1,6 +1,5 @@
 export { openModal, closeModal }
 
-
 function openModal(domElement) {
     domElement.classList.toggle("popup_is-opened");
 }

@@ -75,12 +75,14 @@ profileEditButton.addEventListener("click", () => {
     openModal(profileModal);
 
 });
+
 cardAddButton.addEventListener("click", () => openModal(cardModal));
 placesList.addEventListener("click", function (evt) {
     if (evt.target.classList.contains('card__like-button')) {
         evt.target.classList.toggle("card__like-button_is-active");
     }
 });
+
 placesList.addEventListener("click", function (evt) {
     if (evt.target.classList.contains('card__image')) {
         imageModal.querySelector('.popup__caption').textContent = evt.target.alt;
