@@ -1,67 +1,45 @@
 import './pages/index.css';
-import {showCards, createCard} from "./components/card";
+import {createCard} from "./components/card";
 import { openModal, closeModal } from "./components/modal";
+import {initialCards} from "./components/cards";
 
-const initialCards = [
-    {
-        name: "Архыз",
-        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
-    },
-    {
-        name: "Челябинская область",
-        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
-    },
-    {
-        name: "Иваново",
-        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
-    },
-    {
-        name: "Камчатка",
-        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
-    },
-    {
-        name: "Холмогорский район",
-        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
-    },
-    {
-        name: "Байкал",
-        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-    }
-];
-
-showCards(initialCards);
-
-const placesList = document.querySelector('.places__list');
+const cardsContainer = document.querySelector('.places__list');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const cardAddButton = document.querySelector('.profile__add-button');
 const cardModal = document.querySelector(".popup_type_new-card");
 const profileModal = document.querySelector(".popup_type_edit");
-const imageModal = document.querySelector(".popup_type_image");
+const profileName = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
 
-const changeProfile = (name, description, form) => {
-    document.querySelector('.profile__title').textContent = name;
-    document.querySelector('.profile__description').textContent = description;
+function renderCards(cards) {
+    cards.forEach( x => {
+        cardsContainer.appendChild(createCard(x));
+    })
 }
 
-const handleAddCard = (e) => {
+renderCards(initialCards);
+
+const changeProfile = (name, description) => {
+    profileName.textContent = name;
+    profileDescription.textContent = description;
+}
+
+const handleAddCardFormSubmit = (e) => {
     e.preventDefault();
 
     const form = document.forms['new-place'];
-
 
     const card = {
         name: form.elements['place-name'].value,
         link: form.elements['link'].value
     }
 
-
-    placesList.prepend(createCard(card));
-
+    cardsContainer.prepend(createCard(card));
+    form.reset()
     closeModal(cardModal);
 }
 
-const handleEditProfile = (e) => {
-    console.log(e);
+const handleEditProfileFormSubmit = (e) => {
     e.preventDefault();
 
     const form = document.forms['edit-profile'];
@@ -70,53 +48,18 @@ const handleEditProfile = (e) => {
     closeModal(profileModal);
 }
 
-profileEditButton.addEventListener("click", () => {
-    document.forms['edit-profile'].name.value = document.querySelector(".profile__title").textContent;
-    document.forms['edit-profile'].description.value = document.querySelector(".profile__description").textContent;
+const renderProfileEditForm = () => {
+    document.forms['edit-profile'].name.value = profileName.textContent;
+    document.forms['edit-profile'].description.value = profileDescription.textContent;
     openModal(profileModal);
+}
 
-});
-
+profileEditButton.addEventListener("click", renderProfileEditForm);
 cardAddButton.addEventListener("click", () => {
-    document.forms['new-place'].reset();
     openModal(cardModal)
 });
-placesList.addEventListener("click", function (evt) {
-    if (evt.target.classList.contains('card__like-button')) {
-        evt.target.classList.toggle("card__like-button_is-active");
-    }
-});
 
-placesList.addEventListener("click", function (evt) {
-    if (evt.target.classList.contains('card__image')) {
-        imageModal.querySelector('.popup__caption').textContent = evt.target.alt;
-        imageModal.querySelector('.popup__image').src = evt.target.src;
-        imageModal.querySelector('.popup__image').alt = evt.target.alt;
+//обработка submit
+cardModal.addEventListener("submit", handleAddCardFormSubmit);
+profileModal.addEventListener("submit", handleEditProfileFormSubmit);
 
-        openModal(imageModal);
-    }
-});
-
-cardModal.addEventListener("submit", handleAddCard);
-profileModal.addEventListener("submit", handleEditProfile);
-
-document.addEventListener('keydown', (e) => {
-    if (e.keyCode === 27) {
-        const openedModal = document.querySelector('.popup_is-opened');
-        if (openedModal) {
-            closeModal(openedModal);
-        }
-    }
-})
-
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('popup__close')) {
-        closeModal(document.querySelector('.popup_is-opened'));
-
-    }
-});
-
-document.addEventListener('click',  (event) => {
-    const popup = document.querySelector('.popup_is-opened');
-    if (event.target === popup) closeModal(popup);
-});
