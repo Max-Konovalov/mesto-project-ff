@@ -38,6 +38,36 @@ const cardModal = document.querySelector(".popup_type_new-card");
 const profileModal = document.querySelector(".popup_type_edit");
 const imageModal = document.querySelector(".popup_type_image");
 
+const changeProfile = (name, description, form) => {
+    document.querySelector('.profile__title').textContent = name;
+    document.querySelector('.profile__description').textContent = description;
+}
+
+const addCardHandler = (e) => {
+    e.preventDefault();
+
+    const form = document.forms['new-place'];
+    form.reset;
+
+    const card = {
+        name: form.elements['place-name'].value,
+        link: form.elements['link'].value
+    }
+
+    placesList.prepend(createCard(card));
+
+    closeModal(e.target.parentElement.parentElement);
+}
+
+const editProfileHandler = (e) => {
+    console.log(e);
+    e.preventDefault();
+
+    const form = document.forms['edit-profile'];
+
+    changeProfile(form.elements.name.value, form.elements.description.value);
+    closeModal(e.target.parentElement.parentElement);
+}
 
 profileEditButton.addEventListener("click", () => {
     document.forms['edit-profile'].name.value = document.querySelector(".profile__title").textContent;
@@ -60,35 +90,30 @@ placesList.addEventListener("click", function (evt) {
         openModal(imageModal);
     }
 });
+
 cardModal.addEventListener("submit", addCardHandler);
 profileModal.addEventListener("submit", editProfileHandler);
 
-const addCardHandler = (e) => {
-    e.preventDefault();
 
-    const form = document.forms['new-place'];
-    form.reset;
 
-    const card = {
-        name: form.elements['place-name'].value,
-        link: form.elements['link'].value
+
+
+
+document.addEventListener('keydown', (e) => {
+    if (e.keyCode === 27) {
+        const openedModal = document.querySelector('.popup_is-opened');
+        if (openedModal) {
+            closeModal(openedModal);
+        }
     }
+})
 
-    placesList.prepend(createCard(card));
-
-    closeModal(e.target.parentElement.parentElement);
-}
-
-const editProfileHandler = (e) => {
-    e.preventDefault();
-
-    const form = document.forms['edit-profile'];
-
-    changeProfile(form.elements.name.value, form.elements.description.value);
-    closeModal(e.target.parentElement.parentElement);
-}
-
-const changeProfile = (name, description, form) => {
-    document.querySelector('.profile__title').textContent = name;
-    document.querySelector('.profile__description').textContent = description;
-}
+// const clickOutOfPopupHandler = (event, domElement) => {
+//     if (event.target === domElement) closeModal(domElement);
+// }
+//
+// const closeButtonClickHandler = (closeButton, domElement) => {
+//     closeButton.removeEventListener("click",  closeButtonClickHandler);
+//     closeModal(domElement);
+//
+// }

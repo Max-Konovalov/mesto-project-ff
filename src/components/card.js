@@ -24,3 +24,5 @@ function showCards(cards) {
         placeList.appendChild(createCard(x, deleteCard));
     })
 }
+
+
