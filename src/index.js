@@ -94,11 +94,6 @@ placesList.addEventListener("click", function (evt) {
 cardModal.addEventListener("submit", addCardHandler);
 profileModal.addEventListener("submit", editProfileHandler);
 
-
-
-
-
-
 document.addEventListener('keydown', (e) => {
     if (e.keyCode === 27) {
         const openedModal = document.querySelector('.popup_is-opened');
@@ -108,12 +103,14 @@ document.addEventListener('keydown', (e) => {
     }
 })
 
-// const clickOutOfPopupHandler = (event, domElement) => {
-//     if (event.target === domElement) closeModal(domElement);
-// }
-//
-// const closeButtonClickHandler = (closeButton, domElement) => {
-//     closeButton.removeEventListener("click",  closeButtonClickHandler);
-//     closeModal(domElement);
-//
-// }
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('popup__close')) {
+        closeModal(document.querySelector('.popup_is-opened'));
+
+    }
+});
+
+document.addEventListener('click',  (event) => {
+    const popup = document.querySelector('.popup_is-opened');
+    if (event.target === popup) closeModal(popup);
+});
