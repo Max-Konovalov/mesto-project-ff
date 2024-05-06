@@ -48,13 +48,13 @@ const handleEditProfileFormSubmit = (e) => {
     closeModal(profileModal);
 }
 
-const renderProfileEditForm = () => {
+const openProfileEditForm = () => {
     document.forms['edit-profile'].name.value = profileName.textContent;
     document.forms['edit-profile'].description.value = profileDescription.textContent;
     openModal(profileModal);
 }
 
-profileEditButton.addEventListener("click", renderProfileEditForm);
+profileEditButton.addEventListener("click", openProfileEditForm);
 cardAddButton.addEventListener("click", () => {
     openModal(cardModal)
 });

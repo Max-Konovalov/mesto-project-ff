@@ -33,5 +33,3 @@ function closeModal(domElement) {
     domElement.removeEventListener('click', handleOuterClick);
     document.removeEventListener('keydown', handleEscKeyDown);
 }
-
-

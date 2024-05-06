@@ -10,14 +10,12 @@ const popupImage = imageModal.querySelector('.popup__image');
 const onDeleteCard = (evt) => { evt.target.closest('.places__item').remove() }
 const onLike = (evt) => { evt.target.classList.toggle("card__like-button_is-active") };
 
-const onImageClick = (evt) => {
-        if (evt.target.classList.contains('card__image')) {
+const openImagePopup = (evt) => {
             popupCaption.textContent = evt.target.alt;
             popupImage.src = evt.target.src;
             popupImage.alt = evt.target.alt;
 
             openModal(imageModal);
-        }
 }
 
 function createCard(card) {
@@ -29,7 +27,7 @@ function createCard(card) {
     cardElement.querySelector('.card__title').textContent = card.name;
 
     cardElement.querySelector('.card__like-button').addEventListener('click', onLike);
-    cardElement.addEventListener('click', onImageClick);
+    cardImage.addEventListener('click', openImagePopup);
     cardElement.querySelector('.card__delete-button').addEventListener('click', onDeleteCard);
 
     return cardElement;
