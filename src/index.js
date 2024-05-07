@@ -29,7 +29,7 @@ export const openImagePopup = (evt) => {
     openModal(imageModal);
 }
 
-const onDeleteCard = (cardElement) => { cardElement.closest('.places__item').remove() }
+const onDeleteCard = (cardElement) => { cardElement.remove() }
 const onLike = (cardElement) => {
     cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
 };
