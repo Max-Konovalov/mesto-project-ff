@@ -1,5 +1,5 @@
 import './pages/index.css';
-import {createCard} from "./components/card";
+import {createCard, onLike, onDeleteCard} from "./components/card";
 import { openModal, closeModal, setCloseModalByClickListeners } from "./components/modal";
 import {initialCards} from "./components/cards";
 
@@ -28,11 +28,6 @@ export const openImagePopup = (evt) => {
 
     openModal(imageModal);
 }
-
-const onDeleteCard = (cardElement) => { cardElement.remove() }
-const onLike = (cardElement) => {
-    cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
-};
 
 function renderCards(cards) {
     cards.forEach( x => {

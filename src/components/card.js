@@ -1,6 +1,12 @@
-export {createCard}
+export {createCard, onLike, onDeleteCard}
 
 const cardTemplate = document.querySelector('#card-template').content;
+
+
+const onDeleteCard = (cardElement) => { cardElement.remove() }
+const onLike = (cardElement) => {
+    cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
+};
 
 const createCard = (card, onDeleteCard, onLike, onImageClick) => {
     const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
