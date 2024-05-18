@@ -25,3 +25,15 @@
     line-height: 17px;
   }
 }
+
+.button_inactive {
+  background: transparent;
+  border: 1px solid #000;
+  color: #000;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  opacity: 20%;
+}
