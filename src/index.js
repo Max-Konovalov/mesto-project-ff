@@ -2,7 +2,7 @@ import './pages/index.css';
 import {createCard, onLike, onDeleteCard} from "./components/card";
 import { openModal, closeModal, setCloseModalByClickListeners } from "./components/modal";
 import {initialCards} from "./components/cards";
-import {enableValidation} from "./components/validation";
+import {clearValidation, enableValidation} from "./components/validation";
 
 //Контейнер таблицы карточек
 const cardsContainer = document.querySelector('.places__list');
@@ -71,20 +71,23 @@ const handleEditProfileFormSubmit = (e) => {
 const openProfileEditForm = () => {
     document.forms['edit-profile'].name.value = profileName.textContent;
     document.forms['edit-profile'].description.value = profileDescription.textContent;
-    enableValidation(profileModal);
+    clearValidation(profileModal);
     openModal(profileModal);
 
 }
 
 profileEditButton.addEventListener("click", openProfileEditForm);
 cardAddButton.addEventListener("click", () => {
-    enableValidation(cardModal);
+    clearValidation(cardModal);
     openModal(cardModal)
 });
 
 //обработка submit
 cardModal.addEventListener("submit", handleAddCardFormSubmit);
 profileModal.addEventListener("submit", handleEditProfileFormSubmit);
+
+
+enableValidation();
 
 
 
