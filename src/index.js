@@ -1,8 +1,8 @@
 import './pages/index.css';
 import {createCard, onLike, onDeleteCard} from "./components/card";
 import { openModal, closeModal, setCloseModalByClickListeners } from "./components/modal";
-import {initialCards} from "./components/cards";
 import {clearValidation, enableValidation} from "./components/validation";
+import {getMe, getCards, updateProfile, addCard} from './components/api';
 
 //Контейнер таблицы карточек
 const cardsContainer = document.querySelector('.places__list');
@@ -13,9 +13,12 @@ const cardAddButton = document.querySelector('.profile__add-button');
 const cardModal = document.querySelector(".popup_type_new-card");
 const profileModal = document.querySelector(".popup_type_edit");
 const imageModal = document.querySelector(".popup_type_image");
+
+const popupSubmitButton = document.querySelector('.popup__button');
 //Поля профиля
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileImage = document.querySelector('.profile__image');
 //Поля введения данных для добавления каритинки
 const popupCaption = imageModal.querySelector('.popup__caption');
 const popupImage = imageModal.querySelector('.popup__image');
@@ -31,13 +34,12 @@ const validationConfig = {
     errorClass: 'form__input-error_visible'
 };
 
+const updateProfileView = (me) => {
+    profileName.textContent = me.name;
+    profileDescription.textContent = me.about;
 
-export const openImagePopup = (evt) => {
-    popupCaption.textContent = evt.target.alt;
-    popupImage.src = evt.target.src;
-    popupImage.alt = evt.target.alt;
+    profileImage.setAttribute("style", `background-image: url(${me.avatar}`);
 
-    openModal(imageModal);
 }
 
 function renderCards(cards) {
@@ -46,12 +48,20 @@ function renderCards(cards) {
     })
 }
 
-renderCards(initialCards);
-setCloseModalByClickListeners(popupList);
+function initPage() {
+    Promise.all([getMe() ,getCards()])
+        .then( ([me, cards]) => {
+            renderCards(cards);
+            updateProfileView(me);
+        });
+}
 
-const changeProfile = (name, description) => {
-    profileName.textContent = name;
-    profileDescription.textContent = description;
+export const openImagePopup = (evt) => {
+    popupCaption.textContent = evt.target.alt;
+    popupImage.src = evt.target.src;
+    popupImage.alt = evt.target.alt;
+
+    openModal(imageModal);
 }
 
 const handleAddCardFormSubmit = (e) => {
@@ -63,10 +73,34 @@ const handleAddCardFormSubmit = (e) => {
         name: form.elements['place-name'].value,
         link: form.elements['link'].value
     }
-
+    addCard(card);
     cardsContainer.prepend(createCard(card, onDeleteCard, onLike, openImagePopup));
     form.reset()
     closeModal(cardModal);
+}
+
+const openProfileEditForm = () => {
+    document.forms['edit-profile'].name.value = profileName.textContent;
+    document.forms['edit-profile'].description.value = profileDescription.textContent;
+    clearValidation(profileModal, validationConfig);
+    openModal(profileModal);
+}
+
+const changeProfile = (name, description) => {
+    popupSubmitButton.textContent = 'Сохранение...';
+
+    updateProfile(name, description)
+        .then( (res) =>
+            {
+            profileName.textContent = name;
+            profileDescription.textContent = description;
+            }
+        ).catch( (err) => console.log(err)
+        ).finally( () => {
+            popupSubmitButton.textContent = 'Сохранить';
+            }
+        );
+
 }
 
 const handleEditProfileFormSubmit = (e) => {
@@ -78,13 +112,9 @@ const handleEditProfileFormSubmit = (e) => {
     closeModal(profileModal);
 }
 
-const openProfileEditForm = () => {
-    document.forms['edit-profile'].name.value = profileName.textContent;
-    document.forms['edit-profile'].description.value = profileDescription.textContent;
-    clearValidation(profileModal, validationConfig);
-    openModal(profileModal);
 
-}
+setCloseModalByClickListeners(popupList);
+initPage();
 
 profileEditButton.addEventListener("click", openProfileEditForm);
 cardAddButton.addEventListener("click", () => {
@@ -98,6 +128,5 @@ profileModal.addEventListener("submit", handleEditProfileFormSubmit);
 
 //Добавление валиадции форм
 enableValidation(validationConfig);
-
 
 
