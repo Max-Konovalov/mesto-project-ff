@@ -22,6 +22,16 @@ const popupImage = imageModal.querySelector('.popup__image');
 //Список попапов
 const popupList = [cardModal, profileModal, imageModal];
 
+const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'button_inactive',
+    inputErrorClass: 'form__input_type_error',
+    errorClass: 'form__input-error_visible'
+};
+
+
 export const openImagePopup = (evt) => {
     popupCaption.textContent = evt.target.alt;
     popupImage.src = evt.target.src;
@@ -71,14 +81,14 @@ const handleEditProfileFormSubmit = (e) => {
 const openProfileEditForm = () => {
     document.forms['edit-profile'].name.value = profileName.textContent;
     document.forms['edit-profile'].description.value = profileDescription.textContent;
-    clearValidation(profileModal);
+    clearValidation(profileModal, validationConfig);
     openModal(profileModal);
 
 }
 
 profileEditButton.addEventListener("click", openProfileEditForm);
 cardAddButton.addEventListener("click", () => {
-    clearValidation(cardModal);
+    clearValidation(cardModal, validationConfig);
     openModal(cardModal)
 });
 
@@ -86,8 +96,8 @@ cardAddButton.addEventListener("click", () => {
 cardModal.addEventListener("submit", handleAddCardFormSubmit);
 profileModal.addEventListener("submit", handleEditProfileFormSubmit);
 
-
-enableValidation();
+//Добавление валиадции форм
+enableValidation(validationConfig);
 
 
 
