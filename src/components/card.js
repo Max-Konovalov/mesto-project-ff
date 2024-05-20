@@ -1,6 +1,6 @@
-import {openModal, closeModal} from "./modal";
-
 export {createCard, onLike, onDeleteCard}
+
+import {openModal, closeModal} from "./modal";
 import {localData} from "../index";
 import {deleteCard} from "./api";
 
