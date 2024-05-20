@@ -1,4 +1,4 @@
-import {openModal} from "./modal";
+import {openModal, closeModal} from "./modal";
 
 export {createCard, onLike, onDeleteCard}
 import {localData} from "../index";
@@ -9,6 +9,7 @@ const deletePopup = document.querySelector('.delete__popup');
 
 
 const onDeleteCard = (cardElement, card) => {
+    console.log(card);
     launchDeleteCard(cardElement, card);
 }
 const onLike = (cardElement) => {
@@ -23,17 +24,15 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
     const likeButton = cardElement.querySelector('.card__like-button');
     const deleteButton = cardElement.querySelector('.card__delete-button');
 
-    if (card.owner._id !== localData.userId) {
+
+    if (card.owner._id !== localData.userData._id) {
         deleteButton.classList.add("card__delete-button-hidden");
         deleteButton.disabled = true;
     }
 
     cardImage.src = card.link;
     cardImage.alt = card.name;
-
     likeAmount.textContent = card.likes.length ? card.likes.length : 0;
-
-
 
     cardElement.querySelector('.card__title').textContent = card.name;
 
@@ -50,9 +49,8 @@ const launchDeleteCard = (cardElement, card) => {
     const buttonPopupDelete = deletePopup.querySelector('.popup__button');
     buttonPopupDelete.addEventListener("click", (evt) => {
         buttonPopupDelete.textContent = "Удаление...";
-        console.log(card);
         deleteCard(card._id)
-            .then((res) => {
+            .then(() => {
                 cardElement.remove();
                 closeModal(deletePopup);
             })
