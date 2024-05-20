@@ -9,11 +9,13 @@ const cardsContainer = document.querySelector('.places__list');
 //Кнопки открытия попапов
 const profileEditButton = document.querySelector('.profile__edit-button');
 const cardAddButton = document.querySelector('.profile__add-button');
+const profileImageEditButton = document.querySelector('.avatar-edit__button');
 //Попапы
 const cardModal = document.querySelector(".popup_type_new-card");
 const profileModal = document.querySelector(".popup_type_edit");
 const imageModal = document.querySelector(".popup_type_image");
 const deleteModal = document.querySelector(".delete__popup");
+const profileImageModal = document.querySelector(".popup_type_update_avatar");
 
 const popupSubmitButton = document.querySelector('.popup__button');
 //Поля профиля
@@ -24,11 +26,11 @@ const profileImage = document.querySelector('.profile__image');
 const popupCaption = imageModal.querySelector('.popup__caption');
 const popupImage = imageModal.querySelector('.popup__image');
 //Список попапов
-const popupList = [cardModal, profileModal, imageModal, deleteModal];
+const popupList = [cardModal, profileModal, imageModal, deleteModal, profileImageModal];
 
 export const localData = {
-    userId: "",
-    userPhoto: ""
+    userData: {},
+    cardsData: []
 };
 
 const validationConfig = {
@@ -41,10 +43,10 @@ const validationConfig = {
 };
 
 const updateProfileView = (me) => {
-    profileName.textContent = me.name;
-    profileDescription.textContent = me.about;
+    profileName.textContent = localData.userData.name;
+    profileDescription.textContent = localData.userData.about;
 
-    profileImage.setAttribute("style", `background-image: url(${me.avatar}`);
+    profileImage.setAttribute("style", `background-image: url(${localData.userData.avatar}`);
 
 }
 
@@ -52,10 +54,10 @@ function initPage() {
     Promise.all([getMe() ,getCards()])
         .then( ([me, cards]) => {
 
-            localData.userId = me._id;
-            localData.userPhoto = me.avatar;
+            localData.userData = me;
+            localData.cardsData = cards;
 
-            renderCards(cards);
+            renderCards(localData.cardsData);
             updateProfileView(me);
 
         });
@@ -85,8 +87,12 @@ const handleAddCardFormSubmit = (e) => {
     const card = {
         name: form.elements['place-name'].value,
         link: form.elements['link'].value,
-        owner: localData.userId
+        likes: [],
+        owner: {
+            _id : localData.userData._id
+        }
     }
+
     addCard(card);
     cardsContainer.prepend(createCard(card, onDeleteCard, onLike, openImagePopup));
     form.reset()
@@ -117,6 +123,19 @@ const changeProfile = (name, description) => {
 
 }
 
+const changeImage = (link) => {
+    popupSubmitButton.textContent = 'Сохранение...';
+    updateUserPhoto(link)
+        .then( (res) => {
+            profileImage.setAttribute("style", `background-image: url(${res.avatar}`);
+        })
+        .catch( (err) => console.log(err)
+        ).finally( () => {
+            popupSubmitButton.textContent = 'Сохранить';
+        }
+    );
+}
+
 const handleEditProfileFormSubmit = (e) => {
     e.preventDefault();
 
@@ -124,6 +143,16 @@ const handleEditProfileFormSubmit = (e) => {
 
     changeProfile(form.elements.name.value, form.elements.description.value);
     closeModal(profileModal);
+}
+
+const handleEditProfileImageFormSubmit = (e) => {
+    e.preventDefault();
+
+    const form = document.forms['update-avatar'];
+
+    changeImage(form.elements.link.value);
+    form.reset()
+    closeModal(profileImageModal);
 }
 
 
@@ -135,10 +164,16 @@ cardAddButton.addEventListener("click", () => {
     clearValidation(cardModal, validationConfig);
     openModal(cardModal)
 });
+profileImageEditButton.addEventListener("click", () => {
+    clearValidation(profileImageModal, validationConfig);
+    openModal(profileImageModal)
+});
+
 
 //обработка submit
 cardModal.addEventListener("submit", handleAddCardFormSubmit);
 profileModal.addEventListener("submit", handleEditProfileFormSubmit);
+profileImageModal.addEventListener("submit", handleEditProfileImageFormSubmit);
 
 //Добавление валиадции форм
 enableValidation(validationConfig);

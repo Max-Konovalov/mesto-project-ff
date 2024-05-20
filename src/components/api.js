@@ -12,8 +12,8 @@ const requestPattern = {
 }
 
 const checkStatus = (res) => {
-    console.log(res);
-    if (res.ok) { return res.json() }
+    console.log(res.status);
+    if (res.ok) { return res.json()}
     else { throw new Error(`Ошибка: ${res.status}`)}
 }
 
@@ -40,8 +40,8 @@ const updateProfile = async (name, desc) => {
 }
 
 const updateUserPhoto = async (link) => {
-    return request('/users/me/avatar', "PATCH", {
-
+    return request('users/me/avatar', "PATCH", {
+        avatar: link
     });
 }
 
@@ -50,19 +50,19 @@ const updateUserPhoto = async (link) => {
 
 //Карточки
 const getCards = async () => {
-    return request('/cards', "GET");
+    return request('cards', "GET");
 }
 
 const addCard = async (card) => {
-    return request('/cards', "POST", card);
+    return request('cards', "POST", card);
 }
 
 const deleteCard = async (id) => {
-    return request(`/cards/${id}`, "DELETE");
+    return request(`cards/${id}`, "DELETE", { _id : id});
 }
 
 const likeCard = async (id, isLiked) => {
-    return request(`/cards/likes/${id}`, isLiked ? "DELETE" : "PUT", {})
+    return request(`cards/likes/${id}`, isLiked ? "DELETE" : "PUT", {})
 }
 
 
