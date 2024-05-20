@@ -1,12 +1,15 @@
+import {openModal} from "./modal";
+
 export {createCard, onLike, onDeleteCard}
+import {localData} from "../index";
+import {deleteCard} from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const deletePopup = document.querySelector('.delete__popup');
 
 
-const onDeleteCard = (cardElement) => {
-    launchDeleteCard(cardElement);
-    cardElement.remove()
+const onDeleteCard = (cardElement, card) => {
+    launchDeleteCard(cardElement, card);
 }
 const onLike = (cardElement) => {
     cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
@@ -20,6 +23,11 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
     const likeButton = cardElement.querySelector('.card__like-button');
     const deleteButton = cardElement.querySelector('.card__delete-button');
 
+    if (card.owner._id !== localData.userId) {
+        deleteButton.classList.add("card__delete-button-hidden");
+        deleteButton.disabled = true;
+    }
+
     cardImage.src = card.link;
     cardImage.alt = card.name;
 
@@ -30,22 +38,23 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
     cardElement.querySelector('.card__title').textContent = card.name;
 
     likeButton.addEventListener('click', () => onLike(cardElement));
-    deleteButton.addEventListener('click', () => onDeleteCard(cardElement));
+    deleteButton.addEventListener('click', () => onDeleteCard(cardElement, card));
     cardImage.addEventListener('click', onImageClick);
 
     return cardElement;
 }
 
 
-const launchDeleteCard = (event, cardId) => {
-    const selectedCard = event.target.closest(".card");
-    openModal(popupDelete);
+const launchDeleteCard = (cardElement, card) => {
+    openModal(deletePopup);
+    const buttonPopupDelete = deletePopup.querySelector('.popup__button');
     buttonPopupDelete.addEventListener("click", (evt) => {
         buttonPopupDelete.textContent = "Удаление...";
-        deleteCard(cardId._id)
+        console.log(card);
+        deleteCard(card._id)
             .then((res) => {
-                selectedCard.remove();
-                closeModal(popupDelete);
+                cardElement.remove();
+                closeModal(deletePopup);
             })
             .catch((err) => {
                 console.log(err);

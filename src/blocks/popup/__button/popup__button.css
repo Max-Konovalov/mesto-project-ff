@@ -37,3 +37,7 @@
   user-select: none;
   opacity: 20%;
 }
+
+.delete__popup .popup__button {
+  margin-top: 38px;
+}
