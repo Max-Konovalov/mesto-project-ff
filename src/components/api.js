@@ -1,4 +1,4 @@
-export {getMe, getCards, updateProfile, addCard};
+export { getMe, getCards, likeCard, deleteCard, addCard, updateUserPhoto, updateProfile };
 
 const token = 'cef10085-5005-43aa-ab7f-5dc77bbcfb03';
 const cohortId = "wff-cohort-14";
@@ -12,6 +12,7 @@ const requestPattern = {
 }
 
 const checkStatus = (res) => {
+    console.log(res);
     if (res.ok) { return res.json() }
     else { throw new Error(`Ошибка: ${res.status}`)}
 }
@@ -38,6 +39,15 @@ const updateProfile = async (name, desc) => {
     });
 }
 
+const updateUserPhoto = async (link) => {
+    return request('/users/me/avatar', "PATCH", {
+
+    });
+}
+
+
+
+
 //Карточки
 const getCards = async () => {
     return request('/cards', "GET");
@@ -50,6 +60,11 @@ const addCard = async (card) => {
 const deleteCard = async (id) => {
     return request(`/cards/${id}`, "DELETE");
 }
+
+const likeCard = async (id, isLiked) => {
+    return request(`/cards/likes/${id}`, isLiked ? "DELETE" : "PUT", {})
+}
+
 
 
 

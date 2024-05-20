@@ -2,7 +2,7 @@ import './pages/index.css';
 import {createCard, onLike, onDeleteCard} from "./components/card";
 import { openModal, closeModal, setCloseModalByClickListeners } from "./components/modal";
 import {clearValidation, enableValidation} from "./components/validation";
-import {getMe, getCards, updateProfile, addCard} from './components/api';
+import {getMe, getCards, likeCard, deleteCard, addCard, updateUserPhoto, updateProfile } from './components/api';
 
 //Контейнер таблицы карточек
 const cardsContainer = document.querySelector('.places__list');
@@ -13,6 +13,7 @@ const cardAddButton = document.querySelector('.profile__add-button');
 const cardModal = document.querySelector(".popup_type_new-card");
 const profileModal = document.querySelector(".popup_type_edit");
 const imageModal = document.querySelector(".popup_type_image");
+const deleteModal = document.querySelector(".delete__popup");
 
 const popupSubmitButton = document.querySelector('.popup__button');
 //Поля профиля
@@ -23,7 +24,12 @@ const profileImage = document.querySelector('.profile__image');
 const popupCaption = imageModal.querySelector('.popup__caption');
 const popupImage = imageModal.querySelector('.popup__image');
 //Список попапов
-const popupList = [cardModal, profileModal, imageModal];
+const popupList = [cardModal, profileModal, imageModal, deleteModal];
+
+export const localData = {
+    userId: "",
+    userPhoto: ""
+};
 
 const validationConfig = {
     formSelector: '.popup__form',
@@ -42,19 +48,26 @@ const updateProfileView = (me) => {
 
 }
 
+function initPage() {
+    Promise.all([getMe() ,getCards()])
+        .then( ([me, cards]) => {
+
+            localData.userId = me._id;
+            localData.userPhoto = me.avatar;
+
+            renderCards(cards);
+            updateProfileView(me);
+
+        });
+}
+
 function renderCards(cards) {
     cards.forEach( x => {
         cardsContainer.appendChild(createCard(x, onDeleteCard, onLike, openImagePopup));
     })
 }
 
-function initPage() {
-    Promise.all([getMe() ,getCards()])
-        .then( ([me, cards]) => {
-            renderCards(cards);
-            updateProfileView(me);
-        });
-}
+
 
 export const openImagePopup = (evt) => {
     popupCaption.textContent = evt.target.alt;
@@ -71,7 +84,8 @@ const handleAddCardFormSubmit = (e) => {
 
     const card = {
         name: form.elements['place-name'].value,
-        link: form.elements['link'].value
+        link: form.elements['link'].value,
+        owner: localData.userId
     }
     addCard(card);
     cardsContainer.prepend(createCard(card, onDeleteCard, onLike, openImagePopup));
