@@ -2,18 +2,23 @@ export {createCard, onLike, onDeleteCard}
 
 import {openModal, closeModal} from "./modal";
 import {localData} from "../index";
-import {deleteCard} from "./api";
+import {deleteCard, likeCard} from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const deletePopup = document.querySelector('.delete__popup');
 
 
+const setLike = (cardElement) => {
+    cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
+}
+
 const onDeleteCard = (cardElement, card) => {
-    console.log(card);
     launchDeleteCard(cardElement, card);
 }
-const onLike = (cardElement) => {
-    cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
+const onLike = (cardElement, card) => {
+    setLike(cardElement);
+
+    likeCard(card._id, card.likes.some(id => id === localData.userData._id));
 };
 
 const createCard = (card, onDeleteCard, onLike, onImageClick) => {
@@ -29,6 +34,8 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
         deleteButton.classList.add("card__delete-button-hidden");
         deleteButton.disabled = true;
     }
+
+    if (card.likes.includes(localData.userData._id)) { setLike(cardElement)}
 
     cardImage.src = card.link;
     cardImage.alt = card.name;

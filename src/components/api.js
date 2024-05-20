@@ -45,9 +45,6 @@ const updateUserPhoto = async (link) => {
     });
 }
 
-
-
-
 //Карточки
 const getCards = async () => {
     return request('cards', "GET");
