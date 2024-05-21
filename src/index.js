@@ -2,7 +2,7 @@ import './pages/index.css';
 import {createCard, onLike, onDeleteCard} from "./components/card";
 import { openModal, closeModal, setCloseModalByClickListeners } from "./components/modal";
 import {clearValidation, enableValidation} from "./components/validation";
-import {getMe, getCards, likeCard, deleteCard, addCard, updateUserPhoto, updateProfile } from './components/api';
+import {getMe, getCards, addCard, updateUserPhoto, updateProfile } from './components/api';
 
 //Контейнер таблицы карточек
 const cardsContainer = document.querySelector('.places__list');
@@ -93,8 +93,10 @@ const handleAddCardFormSubmit = (e) => {
         }
     }
 
-    addCard(card);
-    cardsContainer.prepend(createCard(card, onDeleteCard, onLike, openImagePopup));
+    addCard(card).then( (res) => {
+        cardsContainer.prepend(createCard(res, onDeleteCard, onLike, openImagePopup));
+    });
+
     form.reset()
     closeModal(cardModal);
 }

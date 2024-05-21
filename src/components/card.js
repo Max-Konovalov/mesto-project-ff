@@ -2,23 +2,29 @@ export {createCard, onLike, onDeleteCard}
 
 import {openModal, closeModal} from "./modal";
 import {localData} from "../index";
-import {deleteCard, likeCard} from "./api";
+import {deleteCard, switchLikeCard} from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const deletePopup = document.querySelector('.delete__popup');
 
 
-const setLike = (cardElement) => {
+const changeLikeElement = (cardElement) => {
     cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
 }
 
 const onDeleteCard = (cardElement, card) => {
+    console.log(cardElement.id);
     launchDeleteCard(cardElement, card);
 }
 const onLike = (cardElement, card) => {
-    setLike(cardElement);
+    let isLiked = cardElement.querySelector('.card__like-button').classList.contains('card__like-button_is-active');
+    let likeAmount = cardElement.querySelector('.like__amount');
 
-    likeCard(card._id, card.likes.some(id => id === localData.userData._id));
+    switchLikeCard(card._id, isLiked).then(res => {
+        likeAmount.textContent = res.likes.length || 0;
+        changeLikeElement(cardElement);
+        return res;
+    });
 };
 
 const createCard = (card, onDeleteCard, onLike, onImageClick) => {
@@ -35,15 +41,16 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
         deleteButton.disabled = true;
     }
 
-    if (card.likes.includes(localData.userData._id)) { setLike(cardElement)}
+    if (card.likes.some(id => id._id ===localData.userData._id)) { changeLikeElement(cardElement)}
 
     cardImage.src = card.link;
     cardImage.alt = card.name;
+    cardElement.id = card._id;
     likeAmount.textContent = card.likes.length ? card.likes.length : 0;
 
     cardElement.querySelector('.card__title').textContent = card.name;
 
-    likeButton.addEventListener('click', () => onLike(cardElement));
+    likeButton.addEventListener('click', () => onLike(cardElement, card));
     deleteButton.addEventListener('click', () => onDeleteCard(cardElement, card));
     cardImage.addEventListener('click', onImageClick);
 
@@ -53,11 +60,14 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
 
 const launchDeleteCard = (cardElement, card) => {
     openModal(deletePopup);
+    console.log("1");
     const buttonPopupDelete = deletePopup.querySelector('.popup__button');
+    console.log("2");
     buttonPopupDelete.addEventListener("click", (evt) => {
         buttonPopupDelete.textContent = "Удаление...";
-        deleteCard(card._id)
+        deleteCard(cardElement.id)
             .then(() => {
+                console.log("sss");
                 cardElement.remove();
                 closeModal(deletePopup);
             })
@@ -67,6 +77,7 @@ const launchDeleteCard = (cardElement, card) => {
             .finally((res) => {
                 buttonPopupDelete.textContent = "Да";
             });
+        console.log("3");
     });
 }
 

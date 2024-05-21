@@ -1,5 +1,4 @@
 export { openModal, closeModal, setCloseModalByClickListeners }
-import {enableValidation} from "./validation";
 
 const handleEscKeyDown = (e) => {
     if (e.key === "Escape") {
