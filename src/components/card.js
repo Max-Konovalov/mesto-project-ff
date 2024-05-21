@@ -6,6 +6,7 @@ import {deleteCard, switchLikeCard} from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const deletePopup = document.querySelector('.delete__popup');
+const buttonPopupDelete = deletePopup.querySelector('.popup__button');
 
 
 const changeLikeElement = (cardElement) => {
@@ -23,6 +24,8 @@ const onLike = (cardElement, card) => {
         likeAmount.textContent = res.likes.length || 0;
         changeLikeElement(cardElement);
         return res;
+    }).catch((err) => {
+        console.log(err);
     });
 };
 
@@ -59,7 +62,6 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
 
 const launchDeleteCard = (cardElement, card) => {
     openModal(deletePopup);
-    const buttonPopupDelete = deletePopup.querySelector('.popup__button');
     buttonPopupDelete.addEventListener("click", (evt) => {
         buttonPopupDelete.textContent = "Удаление...";
         deleteCard(cardElement.id)

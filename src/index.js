@@ -60,7 +60,9 @@ function initPage() {
             renderCards(localData.cardsData);
             updateProfileView(me);
 
-        });
+        }).catch((err) => {
+        console.log(err);
+    });
 }
 
 function renderCards(cards) {
@@ -95,10 +97,11 @@ const handleAddCardFormSubmit = (e) => {
 
     addCard(card).then( (res) => {
         cardsContainer.prepend(createCard(res, onDeleteCard, onLike, openImagePopup));
+        form.reset()
+        closeModal(cardModal);
+    }).catch((err) => {
+        console.log(err);
     });
-
-    form.reset()
-    closeModal(cardModal);
 }
 
 const openProfileEditForm = () => {

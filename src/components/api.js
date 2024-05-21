@@ -1,5 +1,3 @@
-export { getMe, getCards, switchLikeCard, deleteCard, addCard, updateUserPhoto, updateProfile };
-
 const token = 'cef10085-5005-43aa-ab7f-5dc77bbcfb03';
 const cohortId = "wff-cohort-14";
 
@@ -61,6 +59,4 @@ const switchLikeCard = async (id, isLiked) => {
     return request(`cards/likes/${id}`, isLiked ? "DELETE" : "PUT", {})
 }
 
-
-
-
+export { getMe, getCards, switchLikeCard, deleteCard, addCard, updateUserPhoto, updateProfile };
