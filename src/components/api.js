@@ -12,7 +12,6 @@ const requestPattern = {
 }
 
 const checkStatus = (res) => {
-    console.log(res);
     if (res.ok) { return res.json()}
     else { throw new Error(`Ошибка: ${res.status}`)}
 }
@@ -55,7 +54,6 @@ const addCard = async (card) => {
 }
 
 const deleteCard = async (id) => {
-    console.log(id);
     return request(`cards/${id}`, "DELETE", { _id : id});
 }
 

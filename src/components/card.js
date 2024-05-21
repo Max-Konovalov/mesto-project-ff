@@ -13,7 +13,6 @@ const changeLikeElement = (cardElement) => {
 }
 
 const onDeleteCard = (cardElement, card) => {
-    console.log(cardElement.id);
     launchDeleteCard(cardElement, card);
 }
 const onLike = (cardElement, card) => {
@@ -60,14 +59,11 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
 
 const launchDeleteCard = (cardElement, card) => {
     openModal(deletePopup);
-    console.log("1");
     const buttonPopupDelete = deletePopup.querySelector('.popup__button');
-    console.log("2");
     buttonPopupDelete.addEventListener("click", (evt) => {
         buttonPopupDelete.textContent = "Удаление...";
         deleteCard(cardElement.id)
             .then(() => {
-                console.log("sss");
                 cardElement.remove();
                 closeModal(deletePopup);
             })
@@ -77,7 +73,6 @@ const launchDeleteCard = (cardElement, card) => {
             .finally((res) => {
                 buttonPopupDelete.textContent = "Да";
             });
-        console.log("3");
     });
 }
 
