@@ -13,9 +13,16 @@ const changeLikeElement = (cardElement) => {
     cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
 }
 
-const onDeleteCard = (cardElement, card) => {
-    launchDeleteCard(cardElement, card);
+const onDeleteCard = (cardElement) => {
+    deleteCard(cardElement.id)
+        .then(() => {
+            cardElement.remove();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 }
+
 const onLike = (cardElement, card) => {
     let isLiked = cardElement.querySelector('.card__like-button').classList.contains('card__like-button_is-active');
     let likeAmount = cardElement.querySelector('.like__amount');
@@ -60,23 +67,6 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
 }
 
 
-const launchDeleteCard = (cardElement, card) => {
-    openModal(deletePopup);
-    buttonPopupDelete.addEventListener("click", (evt) => {
-        buttonPopupDelete.textContent = "Удаление...";
-        deleteCard(cardElement.id)
-            .then(() => {
-                cardElement.remove();
-                closeModal(deletePopup);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-            .finally((res) => {
-                buttonPopupDelete.textContent = "Да";
-            });
-    });
-}
 
 
 
