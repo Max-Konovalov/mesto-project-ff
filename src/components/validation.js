@@ -1,5 +1,3 @@
-export { enableValidation, clearValidation };
-
 const hasInvalidInput = (inputList) => {
     return inputList.some((inputElement) => {
         return !inputElement.validity.valid;
@@ -63,14 +61,15 @@ function enableValidation(validationCfg) {
     });
 }
 
-const clearValidation = (modal, validationCfg) => {
-    const formElement = modal.querySelector(validationCfg.formSelector);
-    const inputList = Array.from(formElement.querySelectorAll(validationCfg.inputSelector));
-    const buttonElement = formElement.querySelector(validationCfg.submitButtonSelector);
+const clearValidation = (form, validationCfg) => {
+    const inputList = Array.from(form.querySelectorAll(validationCfg.inputSelector));
+    const buttonElement = form.querySelector(validationCfg.submitButtonSelector);
 
     inputList.forEach((inputElement) => {
-        hideInputError(formElement, inputElement, validationCfg);
+        hideInputError(form, inputElement, validationCfg);
     });
     toggleButtonState(inputList, buttonElement, validationCfg.inactiveButtonClass);
 
 }
+
+export { enableValidation, clearValidation };

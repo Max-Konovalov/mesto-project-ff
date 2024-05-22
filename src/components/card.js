@@ -1,6 +1,3 @@
-export {createCard, onLike, onDeleteCard}
-
-import {openModal, closeModal} from "./modal";
 import {localData} from "../index";
 import {deleteCard, switchLikeCard} from "./api";
 
@@ -9,8 +6,8 @@ const deletePopup = document.querySelector('.delete__popup');
 const buttonPopupDelete = deletePopup.querySelector('.popup__button');
 
 
-const changeLikeElement = (cardElement) => {
-    cardElement.querySelector('.card__like-button').classList.toggle("card__like-button_is-active")
+const changeLikeElement = (likeButton) => {
+    likeButton.classList.toggle("card__like-button_is-active")
 }
 
 const onDeleteCard = (cardElement) => {
@@ -24,12 +21,13 @@ const onDeleteCard = (cardElement) => {
 }
 
 const onLike = (cardElement, card) => {
-    let isLiked = cardElement.querySelector('.card__like-button').classList.contains('card__like-button_is-active');
-    let likeAmount = cardElement.querySelector('.like__amount');
+    const isLiked = cardElement.querySelector('.card__like-button').classList.contains('card__like-button_is-active');
+    const likeAmount = cardElement.querySelector('.like__amount');
+    const likeButton = cardElement.querySelector('.card__like-button');
 
     switchLikeCard(card._id, isLiked).then(res => {
         likeAmount.textContent = res.likes.length || 0;
-        changeLikeElement(cardElement);
+        changeLikeElement(likeButton);
         return res;
     }).catch((err) => {
         console.log(err);
@@ -50,7 +48,7 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
         deleteButton.disabled = true;
     }
 
-    if (card.likes.some(id => id._id ===localData.userData._id)) { changeLikeElement(cardElement)}
+    if (card.likes.some(id => id._id ===localData.userData._id)) { changeLikeElement(likeButton)}
 
     cardImage.src = card.link;
     cardImage.alt = card.name;
@@ -61,13 +59,9 @@ const createCard = (card, onDeleteCard, onLike, onImageClick) => {
 
     likeButton.addEventListener('click', () => onLike(cardElement, card));
     deleteButton.addEventListener('click', () => onDeleteCard(cardElement, card));
-    cardImage.addEventListener('click', onImageClick);
+    cardImage.addEventListener('click', () => onImageClick(card));
 
     return cardElement;
 }
 
-
-
-
-
-
+export {createCard, onLike, onDeleteCard}

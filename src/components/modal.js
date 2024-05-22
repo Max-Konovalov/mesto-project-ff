@@ -1,5 +1,3 @@
-export { openModal, closeModal, setCloseModalByClickListeners }
-
 const handleEscKeyDown = (e) => {
     if (e.key === "Escape") {
         const openedModal = document.querySelector('.popup_is-opened');
@@ -31,3 +29,5 @@ const setCloseModalByClickListeners = (popupList) => {
         popup.addEventListener('click', (e) => {if (e.target === popup) closeModal(popup)})
     })
 }
+
+export { openModal, closeModal, setCloseModalByClickListeners }
